@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missile Arcade</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell" aria-label="Missile arcade game">
+      <canvas id="game-canvas" aria-label="Missile game canvas"></canvas>
+      <div id="launch-help" class="launch-help" aria-live="polite"></div>
+      <div class="scanline" aria-hidden="true"></div>
+    </main>
+    <script>
+      (function () {
+        if (window.location.protocol !== "file:") return;
+        var el = document.getElementById("launch-help");
+        if (!el) return;
+        el.textContent = "Running from file:// can block ES modules. Start a local server in this folder: python -m http.server 5500, then open http://localhost:5500";
+        el.classList.add("visible");
+      })();
+    </script>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

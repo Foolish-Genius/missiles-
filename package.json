@@ -1,0 +1,24 @@
+{
+  "name": "missile-arcade",
+  "version": "1.0.0",
+  "description": "HTML5 Canvas arcade survival game inspired by Missiles! by Macaque",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 5500",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "arcade",
+    "game",
+    "canvas",
+    "html5",
+    "survival",
+    "missiles"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/missile-arcade.git"
+  }
+}
