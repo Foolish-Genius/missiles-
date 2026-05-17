@@ -284,7 +284,7 @@ export class RenderSystem {
     ctx.fillStyle = "rgba(163, 180, 216, 0.9)";
     const controlText = compact ? "A/D or Click Turn" : "A/D or Click/Drag to Aim";
     ctx.fillText(controlText, game.worldWidth - 14, compact ? 73 : 31);
-   
+
      const soundLabel = game.soundEnabled ? "SND ON" : "SND OFF";
      const soundColor = game.soundEnabled ? "rgba(120, 255, 120, 0.9)" : "rgba(255, 120, 120, 0.9)";
      ctx.fillStyle = soundColor;
@@ -307,11 +307,16 @@ export class RenderSystem {
     ctx.textBaseline = "middle";
 
     if (game.state === "menu") {
-      ctx.font = "800 64px Trebuchet MS";
-      ctx.fillText("Missile++", game.worldWidth * 0.5, game.worldHeight * 0.34);
-      ctx.font = "700 18px Trebuchet MS";
+      const compact = game.worldWidth < 760;
+      const titleY = compact ? game.worldHeight * 0.24 : game.worldHeight * 0.30;
+      const subtitleY = titleY + (compact ? 44 : 48);
+
+      ctx.font = compact ? "800 46px Trebuchet MS" : "800 64px Trebuchet MS";
+      ctx.fillStyle = "rgba(248, 250, 255, 0.98)";
+      ctx.fillText("Missile++", game.worldWidth * 0.5, titleY);
+      ctx.font = compact ? "700 15px Trebuchet MS" : "700 18px Trebuchet MS";
       ctx.fillStyle = "rgba(215, 227, 255, 0.95)";
-      ctx.fillText("Mission: To delay death", game.worldWidth * 0.5, game.worldHeight * 0.42);
+      ctx.fillText("Mission: To delay death", game.worldWidth * 0.5, subtitleY);
       ctx.fillText("Tap to Start  |  M Toggle Mode  |  C Change Plane", game.worldWidth * 0.5, game.worldHeight * 0.47);
       ctx.fillText("A/D or Click/Drag to aim", game.worldWidth * 0.5, game.worldHeight * 0.51);
       ctx.fillText(`Mode ${CONFIG.MODES[game.mode].label}`, game.worldWidth * 0.5, game.worldHeight * 0.54);
@@ -322,41 +327,22 @@ export class RenderSystem {
       }
     }
 
-    if (game.state === "controlselect") {
-      ctx.font = "700 48px Trebuchet MS";
-      ctx.fillStyle = "rgba(240, 240, 255, 0.98)";
-      ctx.fillText("CHOOSE CONTROL", game.worldWidth * 0.5, game.worldHeight * 0.3);
-      
-      ctx.font = "700 24px Trebuchet MS";
-      const buttonH = 60;
-      const buttonW = 200;
-      const buttonY = game.worldHeight * 0.45;
-      const centerX = game.worldWidth * 0.5;
-      
-      const buttonConfigs = [
-        { x: centerX - buttonW - 20, label: "ARROWS", desc: "A/D Keys" },
-        { x: centerX - buttonW / 2, label: "TOUCH", desc: "Drag" },
-        { x: centerX + 20, label: "JOYSTICK", desc: "D-Pad" },
-      ];
-      
-      for (const btn of buttonConfigs) {
-        ctx.fillStyle = "rgba(60, 100, 160, 0.6)";
-        ctx.fillRect(btn.x, buttonY, buttonW, buttonH);
-        ctx.strokeStyle = "rgba(150, 200, 255, 0.8)";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(btn.x, buttonY, buttonW, buttonH);
-        
-        ctx.fillStyle = "rgba(230, 240, 255, 0.95)";
-        ctx.font = "700 18px Trebuchet MS";
-        ctx.fillText(btn.label, btn.x + buttonW * 0.5, buttonY + 25);
-        ctx.font = "600 12px Trebuchet MS";
-        ctx.fillText(btn.desc, btn.x + buttonW * 0.5, buttonY + 42);
-      }
-      
-      ctx.font = "600 14px Trebuchet MS";
-      ctx.fillStyle = "rgba(180, 190, 220, 0.9)";
-      ctx.fillText("(Feature selection coming soon - tap/click to continue)", game.worldWidth * 0.5, game.worldHeight * 0.75);
-      ctx.fillText("Space or Click to Continue", game.worldWidth * 0.5, game.worldHeight * 0.82);
+    if (game.state === "gameover") {
+      const compact = game.worldWidth < 760;
+      ctx.font = compact ? "700 46px Trebuchet MS" : "700 52px Trebuchet MS";
+      ctx.fillText("DESTROYED", game.worldWidth * 0.5, game.worldHeight * 0.42);
+      ctx.font = compact ? "700 20px Trebuchet MS" : "700 24px Trebuchet MS";
+      ctx.fillStyle = "rgba(255, 76, 76, 0.95)";
+      ctx.fillText(`Final Score ${Math.floor(game.score)}`, game.worldWidth * 0.5, game.worldHeight * 0.5);
+      ctx.fillStyle = "rgba(245, 210, 120, 0.95)";
+      ctx.fillText(`Stars ${game.starsCollected}`, game.worldWidth * 0.5, game.worldHeight * 0.55);
+      ctx.font = compact ? "600 15px Trebuchet MS" : "600 18px Trebuchet MS";
+      ctx.fillStyle = "rgba(220, 228, 255, 0.9)";
+      ctx.fillText("Press Space to play again", game.worldWidth * 0.5, game.worldHeight * 0.61);
+      const modeLabel = CONFIG.MODES[game.mode].label;
+      const planeLabel = CONFIG.PLANES[game.player.planeIndex].label;
+      ctx.fillStyle = "rgba(180, 200, 255, 0.88)";
+      ctx.fillText(`Mode: ${modeLabel} (M)  |  Plane: ${planeLabel} (C)`, game.worldWidth * 0.5, game.worldHeight * 0.65);
     }
 
     if (game.state === "paused") {
@@ -365,23 +351,6 @@ export class RenderSystem {
       ctx.font = "600 20px Trebuchet MS";
       ctx.fillStyle = "rgba(210, 220, 255, 0.9)";
       ctx.fillText("Press Esc to resume", game.worldWidth * 0.5, game.worldHeight * 0.56);
-    }
-
-    if (game.state === "gameover") {
-      ctx.font = "700 52px Trebuchet MS";
-      ctx.fillText("DESTROYED", game.worldWidth * 0.5, game.worldHeight * 0.42);
-      ctx.font = "700 24px Trebuchet MS";
-      ctx.fillStyle = "rgba(255, 76, 76, 0.95)";
-      ctx.fillText(`Final Score ${Math.floor(game.score)}`, game.worldWidth * 0.5, game.worldHeight * 0.5);
-      ctx.fillStyle = "rgba(245, 210, 120, 0.95)";
-      ctx.fillText(`Stars ${game.starsCollected}`, game.worldWidth * 0.5, game.worldHeight * 0.55);
-      ctx.font = "600 18px Trebuchet MS";
-      ctx.fillStyle = "rgba(220, 228, 255, 0.9)";
-      ctx.fillText("Press Space to play again", game.worldWidth * 0.5, game.worldHeight * 0.61);
-      const modeLabel = CONFIG.MODES[game.mode].label;
-      const planeLabel = CONFIG.PLANES[game.player.planeIndex].label;
-      ctx.fillStyle = "rgba(180, 200, 255, 0.88)";
-      ctx.fillText(`Mode: ${modeLabel} (M)  |  Plane: ${planeLabel} (C)`, game.worldWidth * 0.5, game.worldHeight * 0.65);
     }
 
     ctx.restore();

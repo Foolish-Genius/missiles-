@@ -39,7 +39,6 @@ export class Game {
 
     this.state = "menu";
     this.mode = "normal";
-    this.mobileControlMode = null;
     this.elapsed = 0;
     this.score = 0;
     this.destroyedMissiles = 0;
@@ -52,16 +51,8 @@ export class Game {
 
     this.loop = this.loop.bind(this);
     this.handleResize = this.handleResize.bind(this);
-
-    this.setupMobileHooks();
     this.handleResize();
     this.reset(true);
-  }
-
-  setupMobileHooks() {
-    // Placeholder for touch controls so mobile steering can be added later.
-    this.canvas.addEventListener("pointercancel", () => this.input.setVirtualTurnAxis(0));
-    this.canvas.addEventListener("pointerup", () => this.input.setVirtualTurnAxis(0));
   }
 
   start() {
@@ -163,33 +154,11 @@ export class Game {
 
     if (this.input.wasPressed("restart")) {
       if (this.state === "menu") {
-        if (this.isMobile() && !this.mobileControlMode) {
-          this.state = "controlselect";
-        } else {
-          this.reset(false);
-        }
+        this.reset(false);
       } else if (this.state === "gameover") {
-        if (this.isMobile() && !this.mobileControlMode) {
-          this.state = "controlselect";
-        } else {
-          this.reset(false);
-        }
-      }
-    }
-
-    if (this.state === "controlselect" && this.input.wasPressed("restart")) {
-      if (this.mobileControlMode) {
         this.reset(false);
       }
     }
-  }
-
-  isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
-
-  setMobileControlMode(mode) {
-    this.mobileControlMode = mode;
   }
 
   update(dt) {

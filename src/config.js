@@ -67,7 +67,7 @@ export const CONFIG = {
       missileSpeedMultiplier: 1.3,
       spawnRateMultiplier: 1.8,
       scoreMultiplier: 2.0, 
-      missileCapMultiplier: 3,
+      missileCapMultiplier: 2,
       playerSpeedMultiplier: 1.5,
     },
   },
